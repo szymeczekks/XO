@@ -26,6 +26,7 @@ body {
   height: 1000px;
   max-width: 500px;
   margin: 0 auto;
+  padding: 0 10px;
   background-color: #fff;
 }
 
@@ -33,10 +34,15 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   background-color: #000;
   gap: 4px;
+  padding: 4px;
+  height: clamp(2px, 100vw, 480px);
 }
 
 .disactive {
@@ -54,11 +60,11 @@ body {
       -ms-flex-align: center;
           align-items: center;
   width: calc(33.33% - 2.7px);
-  height: 200px;
   background-color: #fff;
   cursor: pointer;
   font-weight: 400;
-  font-size: 140px;
+  font-size: clamp(0px, 25vw, 140px);
+  line-height: 0;
   -webkit-transition: all 0.6s cubic-bezier(0.64, 0.64, 0.28, 1.46);
   transition: all 0.6s cubic-bezier(0.64, 0.64, 0.28, 1.46);
 }
@@ -77,7 +83,7 @@ body {
 }
 
 .win {
-  font-size: 140px;
+  font-size: clamp(0px, 25vw, 140px);
 }
 
 .win * {
@@ -87,7 +93,7 @@ body {
 
 .select {
   font-weight: bold;
-  font-size: 30px;
+  font-size: 25px;
   text-align: center;
   color: #333;
   margin-bottom: 20px;
@@ -100,6 +106,7 @@ body {
   display: -ms-flexbox;
   display: flex;
   gap: 10px;
+  margin-bottom: 20px;
 }
 .select__box {
   display: -webkit-box;

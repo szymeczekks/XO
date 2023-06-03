@@ -1,6 +1,6 @@
 class Game {
-    constructor(firstPlayer, figures, boxes) {
-        this.firstPlayer = firstPlayer;
+    constructor(figures, boxes) {
+        this.firstPlayer = '';
         this.buttons = figures;
         this.boxes = boxes;
         this.winingCombinations=[
@@ -12,7 +12,7 @@ class Game {
             [2, 5, 8],
             [0, 4, 8],
             [2, 4, 6]
-        ],
+        ];
         this.arrO = [];
         this.arrX = [];
     }
@@ -33,7 +33,11 @@ class Game {
 
     showPopup(winner){
         let popup = document.querySelector('.bg');
-        popup.querySelector('.winner-is').innerHTML="Wygrywa: " + winner;
+        if(winner === "Remis"){
+            popup.querySelector('.winner-is').innerHTML=winner;
+        } else {
+            popup.querySelector('.winner-is').innerHTML="Wygrywa: " + winner;
+        }
         popup.classList.add('bg-active');
     }
     
@@ -54,11 +58,18 @@ class Game {
     
     checkArr(arr,winner,label){
         let allFounded = false;
-        for(let i = 0;i < this.winingCombinations.length; i++){
-            allFounded = this.winingCombinations[i].every( ai => arr.includes(ai));
-            if(allFounded === true){
-                this.endOfGame(this.winingCombinations[i],winner,label);
-                return;
+        console.log(arr.length);
+        if(arr.length >= 3){
+            for(let i = 0;i < this.winingCombinations.length; i++){
+                allFounded = this.winingCombinations[i].every( ai => arr.includes(ai));
+                if(allFounded === true){
+                    this.endOfGame(this.winingCombinations[i],winner);
+                    return;
+                }
+                 else if(arr.length === 5 && allFounded === false){
+                    console.log('draw');
+                    this.endOfGame([],'Remis');
+                }
             }
         }
     }
@@ -76,16 +87,21 @@ class Game {
     }
 
     setStartPlayer(player = this.firstPlayer) {
+        this.firstPlayer = player;
         document.querySelector('.select__player .player').innerHTML = player;
-        this.disableButtons();
     }
 
     disablePopup(){
         document.querySelector('.bg').classList.remove('bg-active');
     }
 
+    activeBoxes(action){
+        this.boxes.forEach((box) => {
+            eval(`box.classList.${action}('placeholder-disactive')`);
+        })
+    }
+
     activeBtns(){
-        console.log(this.buttons);
         this.buttons.forEach((figure) => {
             figure.classList.remove('disactive');
         })
@@ -107,6 +123,7 @@ class Game {
         this.clearBoxes();
         this.activeBtns();
         this.clearArrays();
+        this.setStartPlayer('');
     }
 
     boxHandle(event){
@@ -122,37 +139,35 @@ class Game {
     popupHandle(event){
         if(event.getAttribute('data-answear') == "Tak"){
             this.reset();
-            console.log(event);
+            this.activeBoxes('add');
         } else {
             this.disablePopup();
         }
     }
 
-    init() {
-        console.log('init');
-        this.setStartPlayer();
+    init() {;
         this.boxes.forEach((box) => {
             box.addEventListener('click', (event) => {
                 this.boxHandle(event);
             })
         })
+        this.buttons.forEach((button) => {
+            button.addEventListener('click', () => {
+                this.firstPlayer = button.innerHTML;
+                this.setStartPlayer();
+                this.disableButtons();
+                this.activeBoxes('remove');
+            })
+        })
     }
 }
 
-
 document.addEventListener('DOMContentLoaded', (e) => {
-    let figure = "";
-    let newGame = 0;
     const figures = document.querySelectorAll('.select__box');
     const boxes = document.querySelectorAll('.placeholder');
     const popup = document.querySelector('.btns');
-    figures.forEach((selectBox) => {
-        selectBox.addEventListener('click', () => {
-            figure = selectBox.innerHTML;
-            newGame = new Game (figure, figures, boxes);
-            newGame.init();
-        })
-    })
+    newGame = new Game (figures, boxes);
+    newGame.init();
     popup.addEventListener('click', (e) => {
         newGame.popupHandle(e.target);
     })
