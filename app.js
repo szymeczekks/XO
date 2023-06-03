@@ -56,9 +56,8 @@ class Game {
         this.checkArr(arr,this.firstPlayer,label);
     }
     
-    checkArr(arr,winner,label){
+    checkArr(arr,winner){
         let allFounded = false;
-        console.log(arr.length);
         if(arr.length >= 3){
             for(let i = 0;i < this.winingCombinations.length; i++){
                 allFounded = this.winingCombinations[i].every( ai => arr.includes(ai));
